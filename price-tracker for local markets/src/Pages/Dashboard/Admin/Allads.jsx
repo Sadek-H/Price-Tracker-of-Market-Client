@@ -1,16 +1,23 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import { FaCheck, FaTimes, FaTrashAlt } from 'react-icons/fa';
 import { toast } from "react-toastify";
 import Swal from 'sweetalert2';
+import { AuthContext } from '../../../context/AuthContext';
 
 const Allads = () => {
   const [ads, setAds] = useState([]);
   const [loading, setLoading] = useState(true); // loader state
-
+  const {token} = use(AuthContext);
   // Load all ads
   useEffect(() => {
-    axios.get("http://localhost:3000/admin/ads")
+    axios.get("http://localhost:3000/admin/ads",
+       {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+    )
       .then((res) => {
         setAds(res.data);
         setLoading(false);
@@ -21,7 +28,13 @@ const Allads = () => {
   }, []);
 
   const handleapprove = (id) => {
-    axios.put(`http://localhost:3000/admin/update-ads/${id}`, { status: "approved" })
+    axios.put(`http://localhost:3000/admin/update-ads/${id}`, { status: "approved" },
+          {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+    )
       .then((res) => {
         if (res.data.modifiedCount) {
           setAds((prevAds) =>
@@ -45,7 +58,13 @@ const Allads = () => {
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.isConfirmed) {
-        axios.delete(`http://localhost:3000/admin/delete-ads/${id}`)
+        axios.delete(`http://localhost:3000/admin/delete-ads/${id}`,
+           {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+        )
           .then((res) => {
             if (res.data.deletedCount > 0) {
               setAds((prevAds) => prevAds.filter((ad) => ad._id !== id));

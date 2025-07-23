@@ -9,24 +9,34 @@ import { toast } from "react-toastify";
 const EditmyProducts = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [singleproduct, setSingleProduct] = useState({});
-  const { user } = useContext(AuthContext);
+  const [userRole, setUserRole] = useState("");
+  const { user, token } = useContext(AuthContext); // ✅ FIXED
+
   const { id } = useParams();
   const data = useLoaderData();
-  const [userRole, setUserRole] = useState("");
 
-  // Load user role
+  // ✅ Load User Role
   useEffect(() => {
-    if (user?.email) {
-      axios.get(`http://localhost:3000/users`).then((res) => {
-        const currentUser = res.data.find((u) => u.email === user.email);
-        if (currentUser) {
-          setUserRole(currentUser.role);
-        }
-      });
+    if (user?.email && token) {
+      axios
+        .get("http://localhost:3000/users", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          const currentUser = res.data.find((u) => u.email === user.email);
+          if (currentUser) {
+            setUserRole(currentUser.role);
+          }
+        })
+        .catch((err) => {
+          console.error("Failed to fetch user role", err);
+        });
     }
-  }, [user]);
+  }, [user, token]);
 
-  // Load the product to edit
+  // ✅ Load product by ID from pre-fetched loader data
   useEffect(() => {
     if (data) {
       const product = data.find((item) => item._id === id);
@@ -55,32 +65,25 @@ const EditmyProducts = () => {
       price: Number(form.price.value),
     };
 
-   
-    // Ensure all existing prices are numbers
     const existingPrices = (singleproduct?.prices || []).map((p) => ({
       ...p,
       price: Number(p.price),
     }));
 
-    //  Check if current date already exists
     const isDateExists = existingPrices.some(
       (p) => p.date === newPriceEntry.date
     );
 
     let updatedPrices = [...existingPrices];
-
     if (!isDateExists) {
-      updatedPrices.push(newPriceEntry); 
+      updatedPrices.push(newPriceEntry);
     } else {
-     
       updatedPrices = updatedPrices.map((p) =>
         p.date === newPriceEntry.date ? { ...p, price: newPriceEntry.price } : p
       );
     }
 
     const productData = {
-      // vendorEmail: user?.email,
-      // vendorName: user?.displayName || "Unknown",
       marketName: form.marketName.value,
       date: newPriceEntry.date,
       description: form.description.value,
@@ -89,7 +92,6 @@ const EditmyProducts = () => {
       itemDescription: form.itemDescription.value,
       status: "pending",
       prices: updatedPrices,
-      // pricePerUnit: newPriceEntry.price // optional field to keep latest price separate
     };
 
     const endpoint =
@@ -98,16 +100,20 @@ const EditmyProducts = () => {
         : `http://localhost:3000/dashboard/update-product/${id}`;
 
     axios
-      .put(endpoint, productData)
+      .put(endpoint, productData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => {
         if (res.data.modifiedCount > 0) {
-          toast.success("Product updated successfully!");
+          toast.success("✅ Product updated successfully!");
         } else {
-          toast.info("No changes made.");
+          toast.info("ℹ️ No changes were made.");
         }
       })
       .catch((err) => {
-        console.error("Update failed:", err);
+        console.error("❌ Update failed:", err);
         toast.error("Failed to update product.");
       });
   };
@@ -121,32 +127,29 @@ const EditmyProducts = () => {
         onSubmit={handleSubmit}
         className="grid grid-cols-1 md:grid-cols-2 gap-6"
       >
-        {/* Vendor Email (Read only) */}
         <div className="col-span-2">
           <label className="block font-medium mb-1">📧 Vendor Email</label>
           <input
             type="email"
             className="input input-bordered w-full bg-gray-100"
             name="vendorEmail"
-            // value={user?.email || ""}
+            value={user?.email || ""}
             readOnly
             required
           />
         </div>
 
-        {/* Vendor Name (Read only) */}
         <div className="col-span-2">
           <label className="block font-medium mb-1">🧑‍🌾 Vendor Name</label>
           <input
             type="text"
             className="input input-bordered w-full bg-gray-100"
             name="vendorName"
-            //  value={user?.displayName || "Unknown Vendor"}
+            value={user?.displayName || "Unknown Vendor"}
             readOnly
           />
         </div>
 
-        {/* Market Name */}
         <div>
           <label className="block font-medium mb-1">🏪 Market Name</label>
           <input
@@ -159,7 +162,6 @@ const EditmyProducts = () => {
           />
         </div>
 
-        {/* Date Picker */}
         <div>
           <label className="block font-medium mb-1">📅 Date</label>
           <DatePicker
@@ -169,11 +171,8 @@ const EditmyProducts = () => {
           />
         </div>
 
-        {/* Description */}
         <div className="col-span-2">
-          <label className="block font-medium mb-1">
-            📝 Market Description
-          </label>
+          <label className="block font-medium mb-1">📝 Market Description</label>
           <textarea
             name="description"
             rows={3}
@@ -184,7 +183,6 @@ const EditmyProducts = () => {
           />
         </div>
 
-        {/* Item Name */}
         <div>
           <label className="block font-medium mb-1">🥦 Item Name</label>
           <input
@@ -197,7 +195,6 @@ const EditmyProducts = () => {
           />
         </div>
 
-        {/* Price */}
         <div>
           <label className="block font-medium mb-1">
             💵 Price per Unit (৳)
@@ -213,7 +210,6 @@ const EditmyProducts = () => {
           />
         </div>
 
-        {/* Image URL */}
         <div className="col-span-2">
           <label className="block font-medium mb-1">🖼️ Product Image URL</label>
           <input
@@ -226,7 +222,6 @@ const EditmyProducts = () => {
           />
         </div>
 
-        {/* Item Description */}
         <div className="col-span-2">
           <label className="block font-medium mb-1">
             📝 Item Description (Optional)
@@ -240,7 +235,6 @@ const EditmyProducts = () => {
           />
         </div>
 
-        {/* Hidden status */}
         <input type="hidden" name="status" value="pending" />
 
         <div className="col-span-2">

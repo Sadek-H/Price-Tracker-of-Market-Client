@@ -8,7 +8,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const { signInUser, signInWithGoogle } = use(AuthContext);
+  const { signInUser, signInWithGoogle,token } = use(AuthContext);
   const navigate = useNavigate();
 
   const handleSignIn = (e) => {
@@ -39,7 +39,13 @@ const Login = () => {
           email: user.email,
           photo: user.photoURL,
           role: "user",
-        });
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, //send token in header
+          },
+        }
+      );
         navigate("/");
       }
     });

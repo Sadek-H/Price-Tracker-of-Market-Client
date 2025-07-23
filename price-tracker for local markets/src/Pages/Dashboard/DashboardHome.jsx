@@ -37,7 +37,7 @@ const DashboardHome = () => {
         axios.get("http://localhost:3000/admin/total-products"),
         axios.get("http://localhost:3000/admin/total-ads"),
         axios.get("http://localhost:3000/admin/total-orders"),
-      ])
+      ])   
         .then(([usersRes, productsRes, adsRes, ordersRes]) => {
           setStats({
             totalUsers: usersRes.data?.totalUsers || 0,

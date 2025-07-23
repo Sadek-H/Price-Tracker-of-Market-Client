@@ -1,18 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
 import { FaEdit, FaTrashAlt, FaCheck, FaTimes } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
+import { AuthContext } from '../../../context/AuthContext';
 
 const AllProducts = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { token } = useContext(AuthContext); // ✅ Correct usage
 
   // Fetch products
   useEffect(() => {
-    axios.get('http://localhost:3000/dashboard/my-products')
+    axios.get('http://localhost:3000/dashboard/my-products', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then(res => {
         setProducts(res.data);
         setLoading(false);
@@ -21,15 +27,19 @@ const AllProducts = () => {
         console.error(err);
         setLoading(false);
       });
-  }, []);
+  }, [token]);
 
   // Approve product
   const handleApprove = (id) => {
-    axios.put(`http://localhost:3000/dashboard/approveProduct/${id}`)
+    axios.put(`http://localhost:3000/dashboard/approveProduct/${id}`, {}, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((res) => {
         if (res.data.modifiedCount) {
-          setProducts(prevProducts =>
-            prevProducts.map(p => p._id === id ? { ...p, status: "approved" } : p)
+          setProducts(prev =>
+            prev.map(p => p._id === id ? { ...p, status: "approved" } : p)
           );
           toast.success("Approved successfully");
         }
@@ -59,14 +69,21 @@ const AllProducts = () => {
       if (result.isConfirmed) {
         const reason = result.value;
 
-        // Post to rejectedProducts
         axios.post('http://localhost:3000/dashboard/rejectProduct', {
           productId: id,
           reason: reason
+        }, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         })
           .then(() => {
             axios.put(`http://localhost:3000/dashboard/rejectProduct/${id}`, {
               status: 'rejected'
+            }, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
             })
               .then(res => {
                 if (res.data.modifiedCount) {
@@ -103,7 +120,11 @@ const AllProducts = () => {
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.isConfirmed) {
-        axios.delete(`http://localhost:3000/dashboard/deleteProduct/${id}`)
+        axios.delete(`http://localhost:3000/dashboard/deleteProduct/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
           .then((res) => {
             if (res.data.deletedCount) {
               setProducts(prevProducts => prevProducts.filter(p => p._id !== id));
@@ -120,7 +141,6 @@ const AllProducts = () => {
     });
   };
 
-  // Loader
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -137,7 +157,6 @@ const AllProducts = () => {
           <thead className="bg-base-200 text-base">
             <tr>
               <th>#</th>
-              <th>Image</th>
               <th>Item</th>
               <th>Vendor</th>
               <th>Status</th>
@@ -148,9 +167,6 @@ const AllProducts = () => {
             {products.map((p, i) => (
               <tr key={p._id}>
                 <td>{i + 1}</td>
-                <td>
-                  <img src={p.imageUrl} alt={p.itemName} className="w-12 h-12 rounded" />
-                </td>
                 <td>{p.itemName}</td>
                 <td>{p.vendorName}</td>
                 <td className={`font-semibold ${

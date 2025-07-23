@@ -7,18 +7,24 @@ import { AuthContext } from '../../context/AuthContext';
 const CheckoutForm = ({selectedProduct}) => {
   const stripe = useStripe();
   const elements = useElements();
-  const {user} = use(AuthContext);
+  const {user,token} = use(AuthContext);
   const [clientSecret, setClientSecret] = useState('');
   const [processing, setProcessing] = useState(false);
   const [paymentSucceeded, setPaymentSucceeded] = useState(false);
- 
+  
  
    const amount = parseInt(selectedProduct?.prices?.[0]?.price || "0") * 100;
 
   useEffect(() => {
     // Call your backend to create payment intent and get clientSecret
     axios
-      .post('http://localhost:3000/create-payment-intent', { amount })
+      .post('http://localhost:3000/create-payment-intent', { amount },
+         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((res) => setClientSecret(res.data.clientSecret))
       .catch(() => toast.error('Unable to start payment process.'));
   }, []);

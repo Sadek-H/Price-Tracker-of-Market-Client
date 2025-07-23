@@ -9,7 +9,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 const SignUp = () => {
   const [error, setError] = useState("");
-  const { createUser, profile, setUser, user, signInWithGoogle } =
+  const { createUser, profile, setUser, user, signInWithGoogle, token } =
     useContext(AuthContext);
   const navigate = useNavigate();
   const handleSubmit = (e) => {
@@ -18,7 +18,7 @@ const SignUp = () => {
     let formdata = new FormData(form);
     let alldata = Object.fromEntries(formdata.entries());
     let { email, password, name, photo } = alldata;
-     let passtest = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
+    let passtest = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
     if (passtest.test(password) === false) {
       setError(
         "Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, Length must be 6 characters"
@@ -44,12 +44,20 @@ const SignUp = () => {
     });
     //send user data to server
     axios
-      .post("http://localhost:3000/users", {
-        name,
-        email,
-        photo,
-        role: "user",
-      })
+      .post(
+        "http://localhost:3000/users",
+        {
+          name,
+          email,
+          photo,
+          role: "user",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .catch((err) => {
         setError(err.message || "Registration failed");
       });
@@ -77,12 +85,20 @@ const SignUp = () => {
           });
 
           //send user data to server
-          axios.post("http://localhost:3000/users", {
-            name: user.displayName,
-            email: user.email,
-            photo: user.photoURL,
-            role: "user",
-          });
+          axios.post(
+            "http://localhost:3000/users",
+            {
+              name: user.displayName,
+              email: user.email,
+              photo: user.photoURL,
+              role: "user",
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
           navigate("/");
         }
       })

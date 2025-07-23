@@ -1,17 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import { AuthContext } from '../../../context/AuthContext';
 
 const AllOrder = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const {token} = use(AuthContext);
   useEffect(() => {
     // Fetch all orders when component mounts
-    axios.get('http://localhost:3000/orders')
+    axios.get('http://localhost:3000/orders',
+      {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+      )
       .then(res => setOrders(res.data))
       .catch(err => {
-        console.error('Failed to fetch orders:', err);
-        alert('Failed to load orders. Please try again later.');
+        toast.error('Failed to fetch orders:', err);
+       
       })
       .finally(() => setLoading(false));
   }, []);

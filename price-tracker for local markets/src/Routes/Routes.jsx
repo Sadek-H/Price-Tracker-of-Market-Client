@@ -18,129 +18,148 @@ import AllProducts from "../Pages/Dashboard/Admin/AllProducts";
 import Allads from "../Pages/Dashboard/Admin/Allads";
 import AllOrder from "../Pages/Dashboard/Admin/AllOrder";
 import ProductInfo from "../Pages/ProductDetails/ProductInfo";
-
 import Payment from "../Pages/ProductDetails/Payment";
 import CheckoutForm from "../Pages/ProductDetails/CheckoutForm";
 import ViewPriceTrends from "../Pages/Dashboard/User/ViewPriceTrends";
 import WatchList from "../Pages/Dashboard/User/WatchList";
 import Orderlist from "../Pages/Dashboard/User/Orderlist";
-import AdsCarousel from "../Pages/Home/AdsCarousel";
 import Allproduct from "../Pages/Allproduct";
 import Privateroutes from "./Privateroutes";
 import Notfound from "../Pages/Notfound";
+import { AdminRoute } from "./ProtectedRoutes";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     Component: MainLayout,
-    errorElement: <Notfound/>,
+    errorElement: <Notfound />,
     children: [
       {
         index: true,
         Component: Home,
       },
       {
-       path: "login",
+        path: "login",
         Component: Login,
       },
       {
-       path: "register",
+        path: "register",
         Component: SignUp,
       },
       {
-       path: "details/:id",
-      element:<Privateroutes><ProductInfo/></Privateroutes>,
-        loader: ()=> fetch("http://localhost:3000/products")
+        path: "details/:id",
+        element: (
+          <Privateroutes>
+            <ProductInfo />
+          </Privateroutes>
+        ),
+        loader: () => fetch("http://localhost:3000/products"),
       },
       {
-       path: "payment/:id",
+        path: "payment/:id",
         Component: Payment,
-        loader: ()=> fetch("http://localhost:3000/products")
-       
+        loader: () => fetch("http://localhost:3000/products"),
       },
       {
-       path: "checkOut",
+        path: "checkOut",
         Component: CheckoutForm,
-       
       },
       {
         path: "products",
         Component: Allproduct,
-       
       },
-    
     ],
-},
-{
-  path: "/dashboard",
-  element:<Privateroutes><DashboardLayout></DashboardLayout></Privateroutes> ,
-  errorElement: <Notfound/>,
-  children:[
-    {
-      index: true,
-      Component: DashboardHome,
-    },
-    {
-      path: "/dashboard/users",
-      Component: Allusers,
-    },
-    {
-      path: "/dashboard/become-vendor",
-      Component:BecomeVendor,
-    },
-    {
-      path: "/dashboard/all-vendors",
-      Component: VendorRequest,
-    },
-    {
-      path: "/dashboard/add-product",
-      Component: AddProduct,
-    },
-    {
-      path: "/dashboard/my-products",
-      Component: MyProduct,
-    },
-    {
-      path: "/dashboard/pricetrends",
-      Component: ViewPriceTrends,
-    },
-    {
-      path: "/dashboard/Watchlist",
-      Component: WatchList,
-    },
-    {
-      path: "/dashboard/update-product/:id",
-      Component: EditmyProducts,
-      loader:()=> fetch("http://localhost:3000/dashboard/my-products"),
-    },
-    {
-      path: "/dashboard/add-advertisement",
-      Component:AddAds,
-    },
-    {
-      path: "/dashboard/my-ads",
-      Component: MyAds,
-    },
-    {
-      path: "/dashboard/all-products",
-      Component: AllProducts,
-     
-    },
-    {
-      path: "/dashboard/all-ads",
-      Component: Allads,
-     
-    },
-    {
-      path: "/dashboard/all-orders",
-      Component: AllOrder,
-      
-    },  
-    {
-      path: "/dashboard/my-orders",
-      Component: Orderlist,
-      
-    },  
-  ]
-}
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <Privateroutes>
+        <DashboardLayout />
+      </Privateroutes>
+    ),
+    errorElement: <Notfound />,
+    children: [
+      {
+        index: true,
+        Component: DashboardHome,
+      },
+      {
+        path: "/dashboard/users",
+        element: (
+          <AdminRoute>
+            <Allusers />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "/dashboard/become-vendor",
+        Component: BecomeVendor,
+      },
+      {
+        path: "/dashboard/all-vendors",
+        element: (
+          <AdminRoute>
+            <VendorRequest />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "/dashboard/add-product",
+        Component: AddProduct,
+      },
+      {
+        path: "/dashboard/my-products",
+        Component: MyProduct,
+      },
+      {
+        path: "/dashboard/pricetrends",
+        Component: ViewPriceTrends,
+      },
+      {
+        path: "/dashboard/Watchlist",
+        Component: WatchList,
+      },
+      {
+        path: "/dashboard/update-product/:id",
+        Component: EditmyProducts,
+        loader: () => fetch("http://localhost:3000/dashboard/my-products"),
+      },
+      {
+        path: "/dashboard/add-advertisement",
+        Component: AddAds,
+      },
+      {
+        path: "/dashboard/my-ads",
+        Component: MyAds,
+      },
+      {
+        path: "/dashboard/all-products",
+        element: (
+          <AdminRoute>
+            <AllProducts />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "/dashboard/all-ads",
+        element: (
+          <AdminRoute>
+            <Allads />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "/dashboard/all-orders",
+        element: (
+          <AdminRoute>
+            <AllOrder />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "/dashboard/my-orders",
+        Component: Orderlist,
+      },
+    ],
+  },
 ]);

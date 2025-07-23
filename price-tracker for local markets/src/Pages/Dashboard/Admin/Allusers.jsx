@@ -1,21 +1,57 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { AuthContext } from "../../../context/AuthContext";
+import { toast } from "react-toastify";
 
 const Allusers = () => {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(6);
+  const { token } = useContext(AuthContext); // ✅ fix here
 
+  // Fetch users
   useEffect(() => {
     axios
-      .get("http://localhost:3000/users")
+      .get("http://localhost:3000/users", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => setUsers(res.data))
       .catch((err) => {
         console.error("Fetch failed:", err);
         setUsers([]);
       });
-  }, []);
+  }, [token]);
+
+  // ✅ Handle Role Change
+  const handleRoleChange = (userId, newRole) => {
+    axios
+      .patch(
+        `http://localhost:3000/users/role/${userId}`,
+        { role: newRole },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        if (res.data.modifiedCount > 0) {
+          setUsers((prev) =>
+            prev.map((user) =>
+              user._id === userId ? { ...user, role: newRole } : user
+            )
+          );
+          toast.success(`User role updated to ${newRole}`);
+        }
+      })
+      .catch((err) => {
+        console.error("Role update failed:", err);
+        toast.error("Failed to update role.");
+      });
+  };
 
   // Search filtering
   const filteredUsers = users.filter(
@@ -23,7 +59,6 @@ const Allusers = () => {
       user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email?.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  console.log(filteredUsers);
 
   // Pagination slice
   const totalPages = Math.ceil(filteredUsers.length / rowsPerPage);
@@ -33,7 +68,7 @@ const Allusers = () => {
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
-    setCurrentPage(1); // Reset to first page when searching
+    setCurrentPage(1);
   };
 
   return (
@@ -42,7 +77,6 @@ const Allusers = () => {
         All Registered Users
       </h1>
 
-      {/* Search Input */}
       <div className="mb-4 flex justify-center">
         <input
           type="text"
@@ -53,7 +87,6 @@ const Allusers = () => {
         />
       </div>
 
-      {/* Users Table */}
       {currentUsers.length === 0 ? (
         <div className="text-center text-gray-500">No users found.</div>
       ) : (
@@ -73,6 +106,22 @@ const Allusers = () => {
                   <td className="px-4 py-2 border-t">{user.email || "N/A"}</td>
                   <td className="px-4 py-2 border-t capitalize">
                     {user.role || "user"}
+                    {user.role !== "admin" && (
+                      <button
+                        onClick={() => handleRoleChange(user._id, "admin")}
+                        className="ml-2 px-2 py-1 text-xs bg-blue-500 text-white rounded"
+                      >
+                        Make Admin
+                      </button>
+                    )}
+                    {user.role !== "vendor" && (
+                      <button
+                        onClick={() => handleRoleChange(user._id, "vendor")}
+                        className="ml-2 px-2 py-1 text-xs bg-purple-500 text-white rounded"
+                      >
+                        Make Vendor
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -81,7 +130,6 @@ const Allusers = () => {
         </div>
       )}
 
-      {/* Pagination Buttons */}
       {totalPages > 1 && (
         <div className="flex justify-center mt-4 gap-2">
           <button
@@ -89,7 +137,7 @@ const Allusers = () => {
             disabled={currentPage === 1}
             className="px-3 py-1 bg-gray-200 rounded"
           >
-           Prev
+            Prev
           </button>
           {[...Array(totalPages)].map((_, i) => (
             <button
@@ -111,7 +159,7 @@ const Allusers = () => {
             disabled={currentPage === totalPages}
             className="px-3 py-1 bg-gray-200 rounded"
           >
-           Next
+            Next
           </button>
         </div>
       )}

@@ -10,21 +10,23 @@ import { FaBars, FaTimes } from "react-icons/fa";
 import Footer from "../Pages/Home/Footer";
 
 const DashboardLayout = () => {
-  const { user } = useContext(AuthContext);
+  const { user,token } = useContext(AuthContext);
   const [role, setRole] = useState("");
   const [loading, setLoading] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false); 
-
+  
   useEffect(() => {
     if (user?.email) {
-      axios.get(`http://localhost:3000/users/role/${user.email}`)
+      axios.get(`http://localhost:3000/users/role/${user.email}`
+           
+      )
         .then(res => {
           setRole(res.data.role);
           setLoading(false);
         })
         .catch(err => console.log(err));
     }
-  }, [user]);
+  }, [user,token]);
 
   if (loading) {
     return (

@@ -28,23 +28,36 @@ const ProductDetails = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [comparisonData, setComparisonData] = useState([]);
   const [role, setRole] = useState("user");
-  const { user } = useContext(AuthContext) || { user: { role: "user" } };
+  const { user,token } = useContext(AuthContext) || { user: { role: "user" } };
 
   console.log(role);
   useEffect(() => {
     if (user?.email) {
       axios
-        .get(`http://localhost:3000/users/${user.email}`)
+        .get(`http://localhost:3000/users/${user.email}`,
+          {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+        )
         .then((res) => {
           setRole(res.data?.role || "user");
         })
         .catch((err) => console.error(err));
+    
     }
   }, [user?.email]);
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/products/${id}`)
+      .get(`http://localhost:3000/products/${id}`,
+        {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+      )
       .then((res) => {
         console.log(res.data);
         setProduct(res.data);
@@ -54,7 +67,13 @@ const ProductDetails = () => {
 
   const fetchReviews = () => {
     axios
-      .get("http://localhost:3000/review")
+      .get("http://localhost:3000/review",
+        {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+      )
       .then((res) => {
         const filtered = res.data.filter((r) => r.productId === id);
         setReviews(filtered);
@@ -87,7 +106,13 @@ const ProductDetails = () => {
     };
 
     axios
-      .post("http://localhost:3000/review", newReview)
+      .post("http://localhost:3000/review", newReview,
+        {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+      )
       .then((res) => {
         if (res.data) {
           toast.success("Review submitted!");
@@ -101,7 +126,13 @@ const ProductDetails = () => {
 
   const handleDeleteReview = (reviewId) => {
     axios
-      .delete(`http://localhost:3000/review/${reviewId}`)
+      .delete(`http://localhost:3000/review/${reviewId}`,
+        {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+      )
       .then(() => {
         setReviews((prev) => prev.filter((r) => r._id !== reviewId));
         toast.success("Review deleted!");
@@ -128,7 +159,13 @@ const ProductDetails = () => {
     };
 
     axios
-      .post("http://localhost:3000/watchlist", data)
+      .post("http://localhost:3000/watchlist", data,
+        {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+      )
       .then(() => toast.success("Added to watchlist!"))
       .catch(() => toast.error("Failed to add to watchlist"));
   };
