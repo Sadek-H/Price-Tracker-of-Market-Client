@@ -31,8 +31,8 @@ const VendorRequest = () => {
 
   const handleApprove = async (id) => {
     try {
-      await axios.patch(
-        `http://localhost:3000/dashboard/vendor-requests/approve/${id}`,
+      await axios.put(
+        `http://localhost:3000/dashboard/vendor-requests/approve/${id}`,{},
         {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -65,7 +65,7 @@ const VendorRequest = () => {
     if (confirm.isConfirmed) {
       try {
         await axios.patch(
-          `http://localhost:3000/dashboard/vendor-requests/reject/${id}`,
+          `http://localhost:3000/dashboard/vendor-requests/reject/${id}`,{},
           {
         headers: {
           Authorization: `Bearer ${token}`,
