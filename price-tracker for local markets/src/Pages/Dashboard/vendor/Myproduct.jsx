@@ -40,7 +40,7 @@ const MyProduct = () => {
         setProducts(res.data);
         setLoading(false);
       });
-  }, [user?.email]);
+  }, [user?.email,token]);
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -54,7 +54,7 @@ const MyProduct = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`http://localhost:3000/dashboard/delete-product/${id}`,
+          .delete(`http://localhost:3000/dashboard/deleteProduct/${id}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -64,7 +64,7 @@ const MyProduct = () => {
           .then((res) => {
             if (res.data.deletedCount > 0) {
               setProducts((prev) => prev.filter((p) => p._id !== id));
-              toast.success("✅ Product deleted successfully!");
+              toast.success(" Product deleted successfully!");
             }
           });
       }

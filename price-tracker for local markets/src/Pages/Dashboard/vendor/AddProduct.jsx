@@ -177,7 +177,7 @@ const AddProduct = () => {
         {/* Submit Button */}
         <div className="col-span-2">
           <button type="submit" className="btn btn-success w-full text-lg">
-            ✅ Submit Product
+                 Submit Product
           </button>
         </div>
       </form>
