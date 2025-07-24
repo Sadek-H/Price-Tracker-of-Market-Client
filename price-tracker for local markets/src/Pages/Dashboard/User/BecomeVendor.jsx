@@ -5,30 +5,33 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../../context/AuthContext";
 
-
 const BecomeVendor = () => {
-  const { user,token } = use(AuthContext);
+  const { user, token } = use(AuthContext);
   const [marketName, setMarketName] = useState("");
   const [description, setDescription] = useState("");
- // const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleVendorRequest = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:3000/become-vendor", {
-        email: user.email,
-        name: user.displayName,
-        photo: user.photoURL,
-        marketName,
-        description,
-        status: "pending",
-        role: "vendor-request"
-      },{
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const res = await axios.post(
+        "http://localhost:3000/become-vendor",
+        {
+          email: user.email,
+          name: user.displayName,
+          photo: user.photoURL,
+          marketName,
+          description,
+          status: "pending",
+          role: "vendor-request",
         },
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (res.data.insertedId) {
         console.log(res.data);
@@ -49,7 +52,9 @@ const BecomeVendor = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
     >
-      <h2 className="text-3xl font-bold text-green-700 mb-6 text-center">Become a Vendor</h2>
+      <h2 className="text-3xl font-bold text-green-700 mb-6 text-center">
+        Become a Vendor
+      </h2>
       <form
         onSubmit={handleVendorRequest}
         className="bg-white shadow-lg rounded-xl p-6 space-y-4"
@@ -87,7 +92,9 @@ const BecomeVendor = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Why do you want to become a vendor?</label>
+          <label className="block text-sm font-medium mb-1">
+            Why do you want to become a vendor?
+          </label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
