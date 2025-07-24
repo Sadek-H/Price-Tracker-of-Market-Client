@@ -5,11 +5,16 @@ import Swal from "sweetalert2";
 const VendorRequest = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
-
+ // const {}
   const fetchRequests = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:3000/dashboard/vendor-requests"
+        "http://localhost:3000/dashboard/vendor-requests",
+        {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
       );
       setRequests(res.data);
     } catch (err) {
@@ -26,7 +31,12 @@ const VendorRequest = () => {
   const handleApprove = async (id) => {
     try {
       await axios.patch(
-        `http://localhost:3000/dashboard/vendor-requests/approve/${id}`
+        `http://localhost:3000/dashboard/vendor-requests/approve/${id}`,
+        {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
       );
       Swal.fire("Approved!", "Vendor request approved.", "success");
       setRequests((prev) =>
@@ -54,7 +64,12 @@ const VendorRequest = () => {
     if (confirm.isConfirmed) {
       try {
         await axios.patch(
-          `http://localhost:3000/dashboard/vendor-requests/reject/${id}`
+          `http://localhost:3000/dashboard/vendor-requests/reject/${id}`,
+          {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
         );
         Swal.fire("Rejected!", "Vendor request has been rejected.", "success");
         setRequests((prev) =>

@@ -8,10 +8,11 @@ const Allusers = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(6);
-  const { token } = useContext(AuthContext); // ✅ fix here
+  const [loading, setLoading] = useState(true);
+  const { token } = useContext(AuthContext);
 
-  // Fetch users
   useEffect(() => {
+    setLoading(true);
     axios
       .get("http://localhost:3000/users", {
         headers: {
@@ -22,10 +23,11 @@ const Allusers = () => {
       .catch((err) => {
         console.error("Fetch failed:", err);
         setUsers([]);
-      });
+        toast.error("Failed to fetch users.");
+      })
+      .finally(() => setLoading(false));
   }, [token]);
 
-  // ✅ Handle Role Change
   const handleRoleChange = (userId, newRole) => {
     axios
       .patch(
@@ -53,14 +55,12 @@ const Allusers = () => {
       });
   };
 
-  // Search filtering
   const filteredUsers = users.filter(
     (user) =>
       user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Pagination slice
   const totalPages = Math.ceil(filteredUsers.length / rowsPerPage);
   const indexOfLast = currentPage * rowsPerPage;
   const indexOfFirst = indexOfLast - rowsPerPage;
@@ -83,11 +83,36 @@ const Allusers = () => {
           value={searchTerm}
           onChange={handleSearch}
           placeholder="Search by name or email..."
-          className="border px-4 py-2 rounded w-full max-w-md"
+          disabled={loading}
+          className="border px-4 py-2 rounded w-full max-w-md disabled:opacity-50"
         />
       </div>
 
-      {currentUsers.length === 0 ? (
+      {loading ? (
+        <div className="flex justify-center items-center py-16">
+          <svg
+            className="animate-spin h-10 w-10 text-green-600"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            ></circle>
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+            ></path>
+          </svg>
+          <span className="ml-3 text-green-600 font-semibold">Loading users...</span>
+        </div>
+      ) : currentUsers.length === 0 ? (
         <div className="text-center text-gray-500">No users found.</div>
       ) : (
         <div className="overflow-x-auto">
@@ -106,7 +131,7 @@ const Allusers = () => {
                   <td className="px-4 py-2 border-t">{user.email || "N/A"}</td>
                   <td className="px-4 py-2 border-t capitalize">
                     {user.role || "user"}
-                    {user.role !== "admin" && (
+                    {!loading && user.role !== "admin" && (
                       <button
                         onClick={() => handleRoleChange(user._id, "admin")}
                         className="ml-2 px-2 py-1 text-xs bg-blue-500 text-white rounded"
@@ -114,7 +139,7 @@ const Allusers = () => {
                         Make Admin
                       </button>
                     )}
-                    {user.role !== "vendor" && (
+                    {!loading && user.role !== "vendor" && (
                       <button
                         onClick={() => handleRoleChange(user._id, "vendor")}
                         className="ml-2 px-2 py-1 text-xs bg-purple-500 text-white rounded"
@@ -127,40 +152,41 @@ const Allusers = () => {
               ))}
             </tbody>
           </table>
-        </div>
-      )}
 
-      {totalPages > 1 && (
-        <div className="flex justify-center mt-4 gap-2">
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className="px-3 py-1 bg-gray-200 rounded"
-          >
-            Prev
-          </button>
-          {[...Array(totalPages)].map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setCurrentPage(i + 1)}
-              className={`px-3 py-1 rounded ${
-                currentPage === i + 1
-                  ? "bg-green-500 text-white"
-                  : "bg-gray-200"
-              }`}
-            >
-              {i + 1}
-            </button>
-          ))}
-          <button
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-            disabled={currentPage === totalPages}
-            className="px-3 py-1 bg-gray-200 rounded"
-          >
-            Next
-          </button>
+          {totalPages > 1 && (
+            <div className="flex justify-center mt-4 gap-2">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1 || loading}
+                className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+              >
+                Prev
+              </button>
+              {[...Array(totalPages)].map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentPage(i + 1)}
+                  disabled={loading}
+                  className={`px-3 py-1 rounded ${
+                    currentPage === i + 1
+                      ? "bg-green-500 text-white"
+                      : "bg-gray-200"
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+              <button
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
+                disabled={currentPage === totalPages || loading}
+                className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -27,16 +27,40 @@ const StatCard = ({ icon: Icon, label, value, bgColor }) => (
 
 const DashboardHome = () => {
   const { role } = useOutletContext();
-  const { user } = useContext(AuthContext);
+  const { user,token } = useContext(AuthContext);
   const [stats, setStats] = useState({});
 
   useEffect(() => {
     if (role === "admin") {
       Promise.all([
-        axios.get("http://localhost:3000/admin/total-users"),
-        axios.get("http://localhost:3000/admin/total-products"),
-        axios.get("http://localhost:3000/admin/total-ads"),
-        axios.get("http://localhost:3000/admin/total-orders"),
+        axios.get("http://localhost:3000/admin/total-users",
+          {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+        ),
+        axios.get("http://localhost:3000/admin/total-products",
+          {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+        ),
+        axios.get("http://localhost:3000/admin/total-ads",
+          {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+        ),
+        axios.get("http://localhost:3000/admin/total-orders",
+          {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+        ),
       ])   
         .then(([usersRes, productsRes, adsRes, ordersRes]) => {
           setStats({
@@ -51,8 +75,20 @@ const DashboardHome = () => {
         });
     } else if (role === "vendor" && user?.email) {
       Promise.all([
-        axios.get(`http://localhost:3000/dashboard/myproducts?email=${user.email}`),
-        axios.get(`http://localhost:3000/vendor/dashboard/Ads?email=${user.email}`),
+        axios.get(`http://localhost:3000/dashboard/myproducts?email=${user.email}`,
+          {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+        ),
+        axios.get(`http://localhost:3000/vendor/dashboard/Ads?email=${user.email}`,
+          {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+        ),
       ])
         .then(([productsRes, adsRes]) => {
           setStats({
@@ -65,7 +101,7 @@ const DashboardHome = () => {
         });
     }
     // No stats fetch for user, just show welcome message
-  }, [role, user?.email]);
+  }, [role, user?.email,token]);
 
   // Dashboard Configuration
   let statsToShow = [];
