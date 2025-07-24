@@ -8,7 +8,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const { signInUser, signInWithGoogle,token } = use(AuthContext);
+  const { signInUser, signInWithGoogle, token } = use(AuthContext);
   const navigate = useNavigate();
 
   const handleSignIn = (e) => {
@@ -34,18 +34,20 @@ const Login = () => {
       if (user) {
         toast.success("User Login Successfully");
         //send user data to server
-        axios.post("http://localhost:3000/users", {
-          name: user.displayName,
-          email: user.email,
-          photo: user.photoURL,
-          role: "user",
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, //send token in header
+        axios.post(
+          "http://localhost:3000/users",
+          {
+            name: user.displayName,
+            email: user.email,
+            photo: user.photoURL,
+            role: "user",
           },
-        }
-      );
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, //send token in header
+            },
+          }
+        );
         navigate("/");
       }
     });
