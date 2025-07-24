@@ -19,7 +19,7 @@ const AddAds = () => {
       status: "pending",
     };
     axios
-      .post("http://localhost:3000/dashboard/add-advertisement", adData, {
+      .post("https://price-tracker-of-market-server.onrender.com/dashboard/add-advertisement", adData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

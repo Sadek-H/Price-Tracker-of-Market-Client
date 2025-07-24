@@ -33,28 +33,28 @@ const DashboardHome = () => {
   useEffect(() => {
     if (role === "admin") {
       Promise.all([
-        axios.get("http://localhost:3000/admin/total-users",
+        axios.get("https://price-tracker-of-market-server.onrender.com/admin/total-users",
           {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       }
         ),
-        axios.get("http://localhost:3000/admin/total-products",
+        axios.get("https://price-tracker-of-market-server.onrender.com/admin/total-products",
           {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       }
         ),
-        axios.get("http://localhost:3000/admin/total-ads",
+        axios.get("https://price-tracker-of-market-server.onrender.com/admin/total-ads",
           {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       }
         ),
-        axios.get("http://localhost:3000/admin/total-orders",
+        axios.get("https://price-tracker-of-market-server.onrender.com/admin/total-orders",
           {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -75,14 +75,14 @@ const DashboardHome = () => {
         });
     } else if (role === "vendor" && user?.email) {
       Promise.all([
-        axios.get(`http://localhost:3000/dashboard/myproducts?email=${user.email}`,
+        axios.get(`https://price-tracker-of-market-server.onrender.com/dashboard/myproducts?email=${user.email}`,
           {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       }
         ),
-        axios.get(`http://localhost:3000/vendor/dashboard/Ads?email=${user.email}`,
+        axios.get(`https://price-tracker-of-market-server.onrender.com/vendor/dashboard/Ads?email=${user.email}`,
           {
         headers: {
           Authorization: `Bearer ${token}`,

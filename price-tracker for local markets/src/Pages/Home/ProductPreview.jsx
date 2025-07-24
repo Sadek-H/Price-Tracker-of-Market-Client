@@ -11,7 +11,7 @@ const ProductPreview = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get("http://localhost:3000/products")
+    axios.get("https://price-tracker-of-market-server.onrender.com/products")
       .then((res) => {
         if (res.data) setProducts(res.data);
       });

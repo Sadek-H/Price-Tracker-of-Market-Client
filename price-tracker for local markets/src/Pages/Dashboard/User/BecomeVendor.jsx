@@ -16,7 +16,7 @@ const BecomeVendor = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:3000/become-vendor",
+        "https://price-tracker-of-market-server.onrender.com/become-vendor",
         {
           email: user.email,
           name: user.displayName,

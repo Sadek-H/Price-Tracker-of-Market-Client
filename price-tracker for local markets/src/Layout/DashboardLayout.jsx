@@ -18,7 +18,7 @@ const DashboardLayout = () => {
   useEffect(() => {
     if (user?.email) {
       axios
-        .get(`http://localhost:3000/users/role/${user.email}`)
+        .get(`https://price-tracker-of-market-server.onrender.com/users/role/${user.email}`)
         .then((res) => {
           setRole(res.data.role);
           setLoading(false);

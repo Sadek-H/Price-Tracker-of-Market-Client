@@ -12,7 +12,7 @@ const ViewPriceTrends = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const {token} = use(AuthContext);
   useEffect(() => {
-    axios.get("http://localhost:3000/watchlistPrice",
+    axios.get("https://price-tracker-of-market-server.onrender.com/watchlistPrice",
       {
         headers: {
           Authorization: `Bearer ${token}`,

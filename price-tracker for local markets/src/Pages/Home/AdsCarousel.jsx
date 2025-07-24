@@ -9,7 +9,7 @@ const AdsCarousel = () => {
   const [ads, setAds] = useState([]);
  console.log(ads);
   useEffect(() => {
-    axios.get("http://localhost:3000/advertisements")
+    axios.get("https://price-tracker-of-market-server.onrender.com/advertisements")
       .then(res => setAds(res.data))
       .catch(err => console.error(err));
   }, []);

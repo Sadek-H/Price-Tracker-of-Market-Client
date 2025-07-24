@@ -27,7 +27,7 @@ const Allproduct = () => {
 
   const fetchProducts = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/productsAll");
+      const res = await axios.get("https://price-tracker-of-market-server.onrender.com/productsAll");
       if (res.data) {
         setProducts(res.data);
         setFilteredProducts(res.data);

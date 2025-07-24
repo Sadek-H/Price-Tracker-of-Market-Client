@@ -13,7 +13,7 @@ const MyProduct = () => {
   const [rejection, setRejection] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:3000/dashboard/rejectProduct",
+    axios.get("https://price-tracker-of-market-server.onrender.com/dashboard/rejectProduct",
       {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -29,7 +29,7 @@ const MyProduct = () => {
     if (!user?.email) return;
     axios
       .get(
-        `http://localhost:3000/dashboard/my-products?vendorEmail=${user.email}`,
+        `https://price-tracker-of-market-server.onrender.com/dashboard/my-products?vendorEmail=${user.email}`,
         {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -54,7 +54,7 @@ const MyProduct = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`http://localhost:3000/dashboard/deleteProduct/${id}`,
+          .delete(`https://price-tracker-of-market-server.onrender.com/dashboard/deleteProduct/${id}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,

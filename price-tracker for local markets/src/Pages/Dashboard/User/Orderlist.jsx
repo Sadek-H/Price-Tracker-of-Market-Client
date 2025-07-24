@@ -18,7 +18,7 @@ const Orderlist = () => {
     }
 
     axios
-      .get("http://localhost:3000/orders", {
+      .get("https://price-tracker-of-market-server.onrender.com/orders", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {

@@ -53,12 +53,12 @@ export const router = createBrowserRouter([
             <ProductInfo />
           </Privateroutes>
         ),
-        loader: () => fetch("http://localhost:3000/products"),
+        loader: () => fetch("https://price-tracker-of-market-server.onrender.com/products"),
       },
       {
         path: "payment/:id",
         Component: Payment,
-        loader: () => fetch("http://localhost:3000/products"),
+        loader: () => fetch("https://price-tracker-of-market-server.onrender.com/products"),
       },
       {
         path: "checkOut",
@@ -122,7 +122,7 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/update-product/:id",
         Component: EditmyProducts,
-        loader: () => fetch("http://localhost:3000/dashboard/my-products"),
+        loader: () => fetch("https://price-tracker-of-market-server.onrender.com/dashboard/my-products"),
       },
       {
         path: "/dashboard/add-advertisement",

@@ -12,7 +12,7 @@ const Allads = () => {
   // Load all ads
   useEffect(() => {
     axios
-      .get("http://localhost:3000/admin/ads", {
+      .get("https://price-tracker-of-market-server.onrender.com/admin/ads", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -29,7 +29,7 @@ const Allads = () => {
   const handleapprove = (id) => {
     axios
       .put(
-        `http://localhost:3000/admin/update-ads/${id}`,
+        `https://price-tracker-of-market-server.onrender.com/admin/update-ads/${id}`,
         { status: "approved" },
         {
           headers: {
@@ -61,7 +61,7 @@ const Allads = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`http://localhost:3000/admin/delete-ads/${id}`, {
+          .delete(`https://price-tracker-of-market-server.onrender.com/admin/delete-ads/${id}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },

@@ -32,7 +32,7 @@ const AddProduct = () => {
     console.log(productData);
 
     axios
-      .post("http://localhost:3000/dashboard/add-product", productData,
+      .post("https://price-tracker-of-market-server.onrender.com/dashboard/add-product", productData,
         {
               headers: {
                 Authorization: `Bearer ${token}`,

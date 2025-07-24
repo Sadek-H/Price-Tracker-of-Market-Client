@@ -15,7 +15,7 @@ const AllProducts = () => {
   // Fetch products
   useEffect(() => {
     axios
-      .get("http://localhost:3000/dashboard/my-products", {
+      .get("https://price-tracker-of-market-server.onrender.com/dashboard/my-products", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -34,7 +34,7 @@ const AllProducts = () => {
   const handleApprove = (id) => {
     axios
       .put(
-        `http://localhost:3000/dashboard/approveProduct/${id}`,
+        `https://price-tracker-of-market-server.onrender.com/dashboard/approveProduct/${id}`,
         {},
         {
           headers: {
@@ -77,7 +77,7 @@ const AllProducts = () => {
 
         axios
           .post(
-            "http://localhost:3000/dashboard/rejectProduct",
+            "https://price-tracker-of-market-server.onrender.com/dashboard/rejectProduct",
             {
               productId: id,
               reason: reason,
@@ -91,7 +91,7 @@ const AllProducts = () => {
           .then(() => {
             axios
               .put(
-                `http://localhost:3000/dashboard/rejectProduct/${id}`,
+                `https://price-tracker-of-market-server.onrender.com/dashboard/rejectProduct/${id}`,
                 {
                   status: "rejected",
                 },
@@ -139,7 +139,7 @@ const AllProducts = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`http://localhost:3000/dashboard/deleteProduct/${id}`, {
+          .delete(`https://price-tracker-of-market-server.onrender.com/dashboard/deleteProduct/${id}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },

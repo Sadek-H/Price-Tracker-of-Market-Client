@@ -34,7 +34,7 @@ const ProductDetails = () => {
   useEffect(() => {
     if (user?.email) {
       axios
-        .get(`http://localhost:3000/users/${user.email}`,
+        .get(`https://price-tracker-of-market-server.onrender.com/users/${user.email}`,
           {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -51,7 +51,7 @@ const ProductDetails = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/products/${id}`,
+      .get(`https://price-tracker-of-market-server.onrender.com/products/${id}`,
         {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -67,7 +67,7 @@ const ProductDetails = () => {
 
   const fetchReviews = () => {
     axios
-      .get("http://localhost:3000/review",
+      .get("https://price-tracker-of-market-server.onrender.com/review",
         {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -106,7 +106,7 @@ const ProductDetails = () => {
     };
 
     axios
-      .post("http://localhost:3000/review", newReview,
+      .post("https://price-tracker-of-market-server.onrender.com/review", newReview,
         {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -126,7 +126,7 @@ const ProductDetails = () => {
 
   const handleDeleteReview = (reviewId) => {
     axios
-      .delete(`http://localhost:3000/review/${reviewId}`,
+      .delete(`https://price-tracker-of-market-server.onrender.com/review/${reviewId}`,
         {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -159,7 +159,7 @@ const ProductDetails = () => {
     };
 
     axios
-      .post("http://localhost:3000/watchlist", data,
+      .post("https://price-tracker-of-market-server.onrender.com/watchlist", data,
         {
               headers: {
                 Authorization: `Bearer ${token}`,

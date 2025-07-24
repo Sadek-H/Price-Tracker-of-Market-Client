@@ -14,7 +14,7 @@ const Allusers = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get("http://localhost:3000/users", {
+      .get("https://price-tracker-of-market-server.onrender.com/users", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -31,7 +31,7 @@ const Allusers = () => {
   const handleRoleChange = (userId, newRole) => {
     axios
       .patch(
-        `http://localhost:3000/users/role/${userId}`,
+        `https://price-tracker-of-market-server.onrender.com/users/role/${userId}`,
         { role: newRole },
         {
           headers: {

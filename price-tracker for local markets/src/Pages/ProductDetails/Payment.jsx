@@ -16,7 +16,7 @@ const Payment = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/products/${id}`) 
+      .get(`https://price-tracker-of-market-server.onrender.com/products/${id}`) 
       .then(res => {
         setSelectedProduct(res.data);
         setLoading(false);

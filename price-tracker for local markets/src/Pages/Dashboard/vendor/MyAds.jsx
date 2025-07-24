@@ -11,7 +11,7 @@ const MyAds = () => {
   const {token} = use(AuthContext);
   useEffect(() => {
     axios
-      .get("http://localhost:3000/dashboard/my-ads",
+      .get("https://price-tracker-of-market-server.onrender.com/dashboard/my-ads",
         {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -45,7 +45,7 @@ const MyAds = () => {
   }).then((result) => {
     if (result.isConfirmed) {
       axios
-        .delete(`http://localhost:3000/dashboard/delete-ads/${id}`,
+        .delete(`https://price-tracker-of-market-server.onrender.com/dashboard/delete-ads/${id}`,
            {
           headers: {
             Authorization: `Bearer ${token}`, //send token in header
@@ -76,7 +76,7 @@ const MyAds = () => {
     };
     axios
       .put(
-        `http://localhost:3000/dashboard/update-ads/${editingAd._id}`,
+        `https://price-tracker-of-market-server.onrender.com/dashboard/update-ads/${editingAd._id}`,
         addata ,
          {
           headers: {

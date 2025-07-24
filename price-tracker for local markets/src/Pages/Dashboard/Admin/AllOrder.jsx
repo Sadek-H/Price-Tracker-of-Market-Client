@@ -9,7 +9,7 @@ const AllOrder = () => {
   const {token} = use(AuthContext);
   useEffect(() => {
     // Fetch all orders when component mounts
-    axios.get('http://localhost:3000/orders',
+    axios.get('https://price-tracker-of-market-server.onrender.com/orders',
       {
               headers: {
                 Authorization: `Bearer ${token}`,

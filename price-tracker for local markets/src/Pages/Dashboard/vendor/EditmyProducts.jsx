@@ -19,7 +19,7 @@ const EditmyProducts = () => {
   useEffect(() => {
     if ( token) {
       axios
-        .get("http://localhost:3000/Users",
+        .get("https://price-tracker-of-market-server.onrender.com/Users",
           {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -99,8 +99,8 @@ const EditmyProducts = () => {
 
     const endpoint =
       userRole === "admin"
-        ? `http://localhost:3000/admin/update-product/${id}`
-        : `http://localhost:3000/dashboard/update-product/${id}`;
+        ? `https://price-tracker-of-market-server.onrender.com/admin/update-product/${id}`
+        : `https://price-tracker-of-market-server.onrender.com/dashboard/update-product/${id}`;
 
     axios
       .put(endpoint, productData, {

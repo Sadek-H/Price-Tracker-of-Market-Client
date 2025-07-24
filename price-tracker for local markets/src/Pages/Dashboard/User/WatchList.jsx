@@ -22,7 +22,7 @@ const WatchList = () => {
   const fetchWatchlist = () => {
     setLoading(true);
     axios
-      .get("http://localhost:3000/watchlist", {
+      .get("https://price-tracker-of-market-server.onrender.com/watchlist", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -52,7 +52,7 @@ const WatchList = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`http://localhost:3000/watchlist/${id}`, {
+          .delete(`https://price-tracker-of-market-server.onrender.com/watchlist/${id}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },

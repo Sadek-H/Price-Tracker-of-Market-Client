@@ -45,7 +45,7 @@ const SignUp = () => {
     //send user data to server
     axios
       .post(
-        "http://localhost:3000/users",
+        "https://price-tracker-of-market-server.onrender.com/users",
         {
           name,
           email,
@@ -86,7 +86,7 @@ const SignUp = () => {
 
           //send user data to server
           axios.post(
-            "http://localhost:3000/users",
+            "https://price-tracker-of-market-server.onrender.com/users",
             {
               name: user.displayName,
               email: user.email,

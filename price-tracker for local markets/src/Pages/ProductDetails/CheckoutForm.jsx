@@ -18,7 +18,7 @@ const CheckoutForm = ({selectedProduct}) => {
   useEffect(() => {
     // Call your backend to create payment intent and get clientSecret
     axios
-      .post('http://localhost:3000/create-payment-intent', { amount },
+      .post('https://price-tracker-of-market-server.onrender.com/create-payment-intent', { amount },
          {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -69,7 +69,7 @@ const CheckoutForm = ({selectedProduct}) => {
             marketName : selectedProduct.marketName,
             date: new Date().toISOString().split("T")[0],
         }
-        axios.post("http://localhost:3000/payments",paymentData)
+        axios.post("https://price-tracker-of-market-server.onrender.com/payments",paymentData)
         .then(()=>  toast.success('Payment successful! Thank you.'));
     
       setPaymentSucceeded(true);

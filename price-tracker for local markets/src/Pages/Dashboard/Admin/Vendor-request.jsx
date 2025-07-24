@@ -10,7 +10,7 @@ const VendorRequest = () => {
   const fetchRequests = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:3000/dashboard/vendor-requests",
+        "https://price-tracker-of-market-server.onrender.com/dashboard/vendor-requests",
         {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -32,7 +32,7 @@ const VendorRequest = () => {
   const handleApprove = async (id) => {
     try {
       await axios.put(
-        `http://localhost:3000/dashboard/vendor-requests/approve/${id}`,{},
+        `https://price-tracker-of-market-server.onrender.com/dashboard/vendor-requests/approve/${id}`,{},
         {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -65,7 +65,7 @@ const VendorRequest = () => {
     if (confirm.isConfirmed) {
       try {
         await axios.patch(
-          `http://localhost:3000/dashboard/vendor-requests/reject/${id}`,{},
+          `https://price-tracker-of-market-server.onrender.com/dashboard/vendor-requests/reject/${id}`,{},
           {
         headers: {
           Authorization: `Bearer ${token}`,
