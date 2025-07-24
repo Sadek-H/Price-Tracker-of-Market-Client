@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useContext } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router';
-import { FaEdit, FaTrashAlt, FaCheck, FaTimes } from 'react-icons/fa';
-import { toast } from 'react-toastify';
-import Swal from 'sweetalert2';
-import { AuthContext } from '../../../context/AuthContext';
+import React, { useEffect, useState, useContext } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router";
+import { FaEdit, FaTrashAlt, FaCheck, FaTimes } from "react-icons/fa";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
+import { AuthContext } from "../../../context/AuthContext";
 
 const AllProducts = () => {
   const [products, setProducts] = useState([]);
@@ -14,16 +14,17 @@ const AllProducts = () => {
 
   // Fetch products
   useEffect(() => {
-    axios.get('http://localhost:3000/dashboard/my-products', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then(res => {
+    axios
+      .get("http://localhost:3000/dashboard/my-products", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
         setProducts(res.data);
         setLoading(false);
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
         setLoading(false);
       });
@@ -31,20 +32,25 @@ const AllProducts = () => {
 
   // Approve product
   const handleApprove = (id) => {
-    axios.put(`http://localhost:3000/dashboard/approveProduct/${id}`, {}, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    axios
+      .put(
+        `http://localhost:3000/dashboard/approveProduct/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((res) => {
         if (res.data.modifiedCount) {
-          setProducts(prev =>
-            prev.map(p => p._id === id ? { ...p, status: "approved" } : p)
+          setProducts((prev) =>
+            prev.map((p) => (p._id === id ? { ...p, status: "approved" } : p))
           );
           toast.success("Approved successfully");
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.error("Error approving product:", err);
         toast.error("Failed to approve product");
       });
@@ -53,54 +59,66 @@ const AllProducts = () => {
   // Reject product
   const handleReject = (id) => {
     Swal.fire({
-      title: 'Reject Product',
-      input: 'text',
-      inputLabel: 'Reason for rejection',
-      inputPlaceholder: 'Enter a reason...',
+      title: "Reject Product",
+      input: "text",
+      inputLabel: "Reason for rejection",
+      inputPlaceholder: "Enter a reason...",
       showCancelButton: true,
-      confirmButtonText: 'Reject',
-      cancelButtonText: 'Cancel',
+      confirmButtonText: "Reject",
+      cancelButtonText: "Cancel",
       inputValidator: (value) => {
         if (!value) {
-          return 'You must provide a reason!';
+          return "You must provide a reason!";
         }
-      }
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         const reason = result.value;
 
-        axios.post('http://localhost:3000/dashboard/rejectProduct', {
-          productId: id,
-          reason: reason
-        }, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-          .then(() => {
-            axios.put(`http://localhost:3000/dashboard/rejectProduct/${id}`, {
-              status: 'rejected'
-            }, {
+        axios
+          .post(
+            "http://localhost:3000/dashboard/rejectProduct",
+            {
+              productId: id,
+              reason: reason,
+            },
+            {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
-            })
-              .then(res => {
+            }
+          )
+          .then(() => {
+            axios
+              .put(
+                `http://localhost:3000/dashboard/rejectProduct/${id}`,
+                {
+                  status: "rejected",
+                },
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+              )
+              .then((res) => {
                 if (res.data.modifiedCount) {
-                  setProducts(prev =>
-                    prev.map(p => p._id === id ? { ...p, status: 'rejected' } : p)
+                  setProducts((prev) =>
+                    prev.map((p) =>
+                      p._id === id ? { ...p, status: "rejected" } : p
+                    )
                   );
                   toast.success("Product rejected with reason");
                 } else {
                   toast.warn("Product status not updated, but reason saved.");
                 }
               })
-              .catch(err => {
+              .catch((err) => {
                 console.error("Error updating status:", err);
                 toast.error("Request failed.");
               });
           })
-          .catch(err => {
+          .catch((err) => {
             console.error("Error posting reason:", err);
             toast.error("Request failed.");
           });
@@ -111,31 +129,38 @@ const AllProducts = () => {
   // Delete product
   const handleDelete = (id) => {
     Swal.fire({
-      title: 'Are you sure?',
+      title: "Are you sure?",
       text: "You won't be able to undo this!",
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        axios.delete(`http://localhost:3000/dashboard/deleteProduct/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        axios
+          .delete(`http://localhost:3000/dashboard/deleteProduct/${id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
           .then((res) => {
             if (res.data.deletedCount) {
-              setProducts(prevProducts => prevProducts.filter(p => p._id !== id));
-              Swal.fire('Deleted!', 'The product has been removed.', 'success');
+              setProducts((prevProducts) =>
+                prevProducts.filter((p) => p._id !== id)
+              );
+              Swal.fire("Deleted!", "The product has been removed.", "success");
             } else {
-              Swal.fire('Failed!', 'Product could not be deleted.', 'error');
+              Swal.fire("Failed!", "Product could not be deleted.", "error");
             }
           })
-          .catch(err => {
+          .catch((err) => {
             console.error("Error deleting product:", err);
-            Swal.fire('Error!', 'An error occurred while deleting the product.', 'error');
+            Swal.fire(
+              "Error!",
+              "An error occurred while deleting the product.",
+              "error"
+            );
           });
       }
     });
@@ -169,17 +194,19 @@ const AllProducts = () => {
                 <td>{i + 1}</td>
                 <td>{p.itemName}</td>
                 <td>{p.vendorName}</td>
-                <td className={`font-semibold ${
-                  p.status === 'rejected'
-                    ? 'text-red-500'
-                    : p.status === 'approved'
-                      ? 'text-green-600'
-                      : 'text-yellow-600'
-                }`}>
+                <td
+                  className={`font-semibold ${
+                    p.status === "rejected"
+                      ? "text-red-500"
+                      : p.status === "approved"
+                      ? "text-green-600"
+                      : "text-yellow-600"
+                  }`}
+                >
                   {p.status}
                 </td>
                 <td className="flex gap-2">
-                  {p.status === 'pending' && (
+                  {p.status === "pending" && (
                     <>
                       <button
                         onClick={() => handleApprove(p._id)}
@@ -196,7 +223,9 @@ const AllProducts = () => {
                     </>
                   )}
                   <button
-                    onClick={() => navigate(`/dashboard/update-product/${p._id}`)}
+                    onClick={() =>
+                      navigate(`/dashboard/update-product/${p._id}`)
+                    }
                     className="btn btn-xs btn-info"
                   >
                     <FaEdit />
