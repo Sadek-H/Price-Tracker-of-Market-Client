@@ -1,5 +1,5 @@
 import React, { use, useState } from "react";
-import { useNavigate } from "react-router";
+//import { useNavigate } from "react-router";
 import { motion } from "framer-motion";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -7,10 +7,10 @@ import { AuthContext } from "../../../context/AuthContext";
 
 
 const BecomeVendor = () => {
-  const { user } = use(AuthContext);
+  const { user,token } = use(AuthContext);
   const [marketName, setMarketName] = useState("");
   const [description, setDescription] = useState("");
-  const navigate = useNavigate();
+ // const navigate = useNavigate();
 
   const handleVendorRequest = async (e) => {
     e.preventDefault();
@@ -24,6 +24,10 @@ const BecomeVendor = () => {
         description,
         status: "pending",
         role: "vendor-request"
+      },{
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (res.data.insertedId) {

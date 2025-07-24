@@ -37,14 +37,11 @@ const EditmyProducts = () => {
   }, [user, token]);
 
   // ✅ Load product by ID from pre-fetched loader data
-  useEffect(() => {
-    if (data) {
-      const product = data.find((item) => item._id === id);
-      if (product) {
-        setSingleProduct(product);
-        const latestDate = product?.prices?.[0]?.date || new Date();
-        setSelectedDate(new Date(latestDate));
-      }
+   useEffect(() => {
+    if (data && data._id === id) {
+      setSingleProduct(data);
+      const latestDate = data?.prices?.[0]?.date || new Date();
+      setSelectedDate(new Date(latestDate));
     }
   }, [data, id]);
 

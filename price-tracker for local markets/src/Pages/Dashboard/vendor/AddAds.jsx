@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import { AuthContext } from '../../../context/AuthContext';
 
 const AddAds = () => {
-    const {user} = use(AuthContext);
+    const {user,token} = use(AuthContext);
     const handleSubmit = (e) => {
           e.preventDefault();
         const form = e.target;
@@ -18,7 +18,13 @@ const AddAds = () => {
             image: data.image,
             status: "pending",
         }; 
-        axios.post("http://localhost:3000/dashboard/add-advertisement", adData)
+        axios.post("http://localhost:3000/dashboard/add-advertisement", adData,
+          {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+        )
         .then((res) => {
             if (res.data.insertedId) {
                 Swal.fire("Success", "Advertisement added successfully!", "success");

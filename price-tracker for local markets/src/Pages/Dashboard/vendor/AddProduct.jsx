@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 import axios from "axios";
 import Swal from "sweetalert2";
 const AddProduct = () => {
-  const { user } = useContext(AuthContext);
+  const { user,token } = useContext(AuthContext);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -32,7 +32,13 @@ const AddProduct = () => {
     console.log(productData);
 
     axios
-      .post("http://localhost:3000/dashboard/add-product", productData)
+      .post("http://localhost:3000/dashboard/add-product", productData,
+        {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+      )
       .then((res) => {
         if (res.data.insertedId) {
           Swal.fire("Success", "Product added successfully!", "success");

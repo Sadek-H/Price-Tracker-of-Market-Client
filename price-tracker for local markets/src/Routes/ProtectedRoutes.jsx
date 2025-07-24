@@ -15,8 +15,8 @@ export const VendorRoute = ({ children }) => {
 };
 
 // User only
-export const UserRoute = ({ children }) => {
-  const { role } = useOutletContext();
-  if (role === "user") return children;
-  return <Navigate to="/" replace />;
-};
+// export const UserRoute = ({ children }) => {
+//   const { role } = useOutletContext();
+//   if (role === "user") return children;
+//   return <Navigate to="/" replace />;
+// };

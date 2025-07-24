@@ -1,16 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { AuthContext } from "../../../context/AuthContext";
 
 const MyAds = () => {
   const [ads, setAds] = useState([]);
-  const [loading, setLoading] = useState(true); // loader state
+  const [loading, setLoading] = useState(true); 
   const [showFormModal, setShowFormModal] = useState(false);
   const [editingAd, setEditingAd] = useState(null);
-
+  const {token} = use(AuthContext);
   useEffect(() => {
     axios
-      .get("http://localhost:3000/dashboard/my-ads")
+      .get("http://localhost:3000/dashboard/my-ads",
+        {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+      )
       .then((res) => {
         setAds(res.data);
         setLoading(false);
@@ -19,7 +26,7 @@ const MyAds = () => {
         setAds([]);
         setLoading(false);
       });
-  }, []);
+  }, [token]);
 
   const handleEditClick = (ad) => {
     setEditingAd(ad);
@@ -38,7 +45,13 @@ const MyAds = () => {
   }).then((result) => {
     if (result.isConfirmed) {
       axios
-        .delete(`http://localhost:3000/dashboard/delete-ads/${id}`)
+        .delete(`http://localhost:3000/dashboard/delete-ads/${id}`,
+           {
+          headers: {
+            Authorization: `Bearer ${token}`, //send token in header
+          },
+        }
+        )
         .then((res) => {
           if (res.data.deletedCount > 0) {
             setAds((prevAds) => prevAds.filter((ad) => ad._id !== id));
@@ -64,7 +77,12 @@ const MyAds = () => {
     axios
       .put(
         `http://localhost:3000/dashboard/update-ads/${editingAd._id}`,
-        addata
+        addata ,
+         {
+          headers: {
+            Authorization: `Bearer ${token}`, //send token in header
+          },
+        }
       )
       .then((res) => {
         if (res.data.modifiedCount > 0) {

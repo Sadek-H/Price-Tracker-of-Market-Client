@@ -1,23 +1,38 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
+import { AuthContext } from "../../../context/AuthContext";
 
 const WatchList = () => {
   const [watchlist, setWatchlist] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { user, token } = useContext(AuthContext);
 
   useEffect(() => {
+    if (!user?.email || !token) {
+      setWatchlist([]);
+      setLoading(false);
+      return;
+    }
     fetchWatchlist();
-  }, []);
+  }, [user, token]);
 
   const fetchWatchlist = () => {
     setLoading(true);
     axios
-      .get("http://localhost:3000/watchlist")
+      .get("http://localhost:3000/watchlist", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => {
-        setWatchlist(res.data);
+        // Filter items belonging to current logged-in user only
+        const filtered = res.data.filter(
+          (item) => item.userEmail === user.email
+        );
+        setWatchlist(filtered);
       })
       .catch(() => {
         Swal.fire("Error", "Failed to fetch watchlist", "error");
@@ -37,7 +52,11 @@ const WatchList = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`http://localhost:3000/watchlist/${id}`)
+          .delete(`http://localhost:3000/watchlist/${id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
           .then(() => {
             setWatchlist((prev) => prev.filter((item) => item._id !== id));
             Swal.fire("Removed!", "Item has been removed.", "success");

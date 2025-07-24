@@ -1,18 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import axios from 'axios';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
+import { AuthContext } from '../../../context/AuthContext';
+import { toast } from 'react-toastify';
 
 const ViewPriceTrends = () => {
   const [groupedProducts, setGroupedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedIndex, setSelectedIndex] = useState(0);
-
+  const {token} = use(AuthContext);
   useEffect(() => {
-    axios.get("http://localhost:3000/watchlist")
+    axios.get("http://localhost:3000/watchlistPrice",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
       .then(res => {
         const data = res.data;
+        console.log(data);
         const productMap = new Map();
 
         data.forEach(item => {
@@ -52,11 +61,11 @@ const ViewPriceTrends = () => {
         }
       })
       .catch(err => {
-        console.error("Error fetching watchlist data:", err);
-        alert("Failed to fetch watchlist data. Please check your server.");
+        //console.error("Error fetching watchlist data:", err);
+        toast("Failed to fetch watchlist data. Please check your server.",err);
       })
       .finally(() => setLoading(false));
-  }, []);
+  }, [token]);
 
   if (loading)
     return (

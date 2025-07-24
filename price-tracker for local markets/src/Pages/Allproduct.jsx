@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { Link } from "react-router";
 import ReactDatePicker from "react-datepicker";
@@ -18,13 +18,16 @@ const Allproduct = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(6);
 
+  // Current page items
+  const [currentItems, setCurrentItems] = useState([]);
+
   useEffect(() => {
     fetchProducts();
   }, []);
 
   const fetchProducts = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/products");
+      const res = await axios.get("http://localhost:3000/productsAll");
       if (res.data) {
         setProducts(res.data);
         setFilteredProducts(res.data);
@@ -72,11 +75,18 @@ const Allproduct = () => {
     setCurrentPage(1); // Reset to first page after filtering/sorting
   };
 
-  // Pagination Logic
-  const totalPages = Math.ceil(filteredProducts.length / rowsPerPage);
-  const indexOfLastItem = currentPage * rowsPerPage;
-  const indexOfFirstItem = indexOfLastItem - rowsPerPage;
-  const currentItems = filteredProducts.slice(indexOfFirstItem, indexOfLastItem);
+  // Calculate total pages reactively
+  const totalPages = useMemo(() => {
+    return Math.ceil(filteredProducts.length / rowsPerPage);
+  }, [filteredProducts, rowsPerPage]);
+
+  // Update currentItems when filteredProducts or currentPage changes
+  useEffect(() => {
+    const indexOfLastItem = currentPage * rowsPerPage;
+    const indexOfFirstItem = indexOfLastItem - rowsPerPage;
+    const items = filteredProducts.slice(indexOfFirstItem, indexOfLastItem);
+    setCurrentItems(items);
+  }, [filteredProducts, currentPage, rowsPerPage]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">

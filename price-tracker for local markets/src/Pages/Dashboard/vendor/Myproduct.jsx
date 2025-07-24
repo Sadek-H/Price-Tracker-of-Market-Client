@@ -7,13 +7,19 @@ import Swal from "sweetalert2";
 
 const MyProduct = () => {
   const [products, setProducts] = useState([]);
-  const { user } = useContext(AuthContext);
+  const { user,token } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [rejection, setRejection] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:3000/dashboard/rejectProduct").then((res) => {
+    axios.get("http://localhost:3000/dashboard/rejectProduct",
+      {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+    ).then((res) => {
       if (res.data) {
         setRejection(res.data);
       }
@@ -23,7 +29,12 @@ const MyProduct = () => {
     if (!user?.email) return;
     axios
       .get(
-        `http://localhost:3000/dashboard/my-products?vendorEmail=${user.email}`
+        `http://localhost:3000/dashboard/my-products?vendorEmail=${user.email}`,
+        {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
       )
       .then((res) => {
         setProducts(res.data);
@@ -43,7 +54,13 @@ const MyProduct = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`http://localhost:3000/dashboard/delete-product/${id}`)
+          .delete(`http://localhost:3000/dashboard/delete-product/${id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
           .then((res) => {
             if (res.data.deletedCount > 0) {
               setProducts((prev) => prev.filter((p) => p._id !== id));
