@@ -10,28 +10,31 @@ import { FaBars, FaTimes } from "react-icons/fa";
 import Footer from "../Pages/Home/Footer";
 
 const DashboardLayout = () => {
-  const { user,token } = useContext(AuthContext);
+  const { user, token } = useContext(AuthContext);
   const [role, setRole] = useState("");
   const [loading, setLoading] = useState(true);
-  const [menuOpen, setMenuOpen] = useState(false); 
-  
+  const [menuOpen, setMenuOpen] = useState(false);
+
   useEffect(() => {
     if (user?.email) {
-      axios.get(`http://localhost:3000/users/role/${user.email}`
-           
-      )
-        .then(res => {
+      axios
+        .get(`http://localhost:3000/users/role/${user.email}`)
+        .then((res) => {
           setRole(res.data.role);
           setLoading(false);
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     }
-  }, [user,token]);
+  }, [user, token]);
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Lottie animationData={loaderlottie} loop className="max-w-[550px] w-full" />
+        <Lottie
+          animationData={loaderlottie}
+          loop
+          className="max-w-[550px] w-full"
+        />
       </div>
     );
   }
@@ -53,7 +56,9 @@ const DashboardLayout = () => {
         <>
           <NavLink to="/dashboard/add-product">➕ Add Product</NavLink>
           <NavLink to="/dashboard/my-products">📦 My Products</NavLink>
-          <NavLink to="/dashboard/add-advertisement">📢 Add Advertisement</NavLink>
+          <NavLink to="/dashboard/add-advertisement">
+            📢 Add Advertisement
+          </NavLink>
           <NavLink to="/dashboard/my-ads">🧾 My Advertisements</NavLink>
         </>
       );
@@ -79,7 +84,6 @@ const DashboardLayout = () => {
 
       {/* Mobile menu toggle button */}
       <div className="md:hidden p-2 text-right">
-
         <button
           onClick={() => setMenuOpen(true)}
           className="text-green-800 text-2xl"
@@ -95,7 +99,9 @@ const DashboardLayout = () => {
             fixed md:static top-0 z-50 md:z-auto bg-white md:bg-gradient-to-br 
             md:from-green-100 md:via-white md:to-green-200 text-green-900 shadow-xl 
             md:rounded-r-2xl space-y-2 p-4 transition-all duration-300 ease-in-out
-            ${menuOpen ? "left-0 w-64 min-h-screen" : "-left-full"} md:w-72 md:min-h-screen
+            ${
+              menuOpen ? "left-0 w-64 min-h-screen" : "-left-full"
+            } md:w-72 md:min-h-screen
           `}
         >
           {/* Close icon (mobile only) */}
@@ -108,11 +114,11 @@ const DashboardLayout = () => {
             </button>
           </div>
 
-          <li className="font-bold text-lg mb-2 flex items-center gap-2">📊 Dashboard</li>
+          <li className="font-bold text-lg mb-2 flex items-center gap-2">
+            📊 Dashboard
+          </li>
 
-          <div className="flex flex-col space-y-2">
-            {renderLinks()}
-          </div>
+          <div className="flex flex-col space-y-2">{renderLinks()}</div>
 
           <NavLink to="/">🏠 Back to Home</NavLink>
 
@@ -125,7 +131,6 @@ const DashboardLayout = () => {
         <main className="flex-1 p-4 mt-4 md:mt-0">
           <Outlet context={{ role }} />
         </main>
-
       </div>
       <Footer></Footer>
     </div>
