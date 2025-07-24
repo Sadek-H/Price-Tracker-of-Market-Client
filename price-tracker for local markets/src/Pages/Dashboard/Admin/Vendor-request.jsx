@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { AuthContext } from "../../../context/AuthContext";
 
 const VendorRequest = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
- // const {}
+ const {token} = use(AuthContext);
   const fetchRequests = async () => {
     try {
       const res = await axios.get(
