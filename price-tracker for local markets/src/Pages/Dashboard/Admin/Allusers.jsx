@@ -129,25 +129,19 @@ const Allusers = () => {
                 <tr key={user._id} className="hover:bg-green-50">
                   <td className="px-4 py-2 border-t">{user.name || "N/A"}</td>
                   <td className="px-4 py-2 border-t">{user.email || "N/A"}</td>
-                  <td className="px-4 py-2 border-t capitalize">
-                    {user.role || "user"}
-                    {!loading && user.role !== "admin" && (
-                      <button
-                        onClick={() => handleRoleChange(user._id, "admin")}
-                        className="ml-2 px-2 py-1 text-xs bg-blue-500 text-white rounded"
-                      >
-                        Make Admin
-                      </button>
-                    )}
-                    {!loading && user.role !== "vendor" && (
-                      <button
-                        onClick={() => handleRoleChange(user._id, "vendor")}
-                        className="ml-2 px-2 py-1 text-xs bg-purple-500 text-white rounded"
-                      >
-                        Make Vendor
-                      </button>
-                    )}
-                  </td>
+                 <td className="px-4 py-2 border-t">
+  <select
+    value={user.role}
+    onChange={(e) => handleRoleChange(user._id, e.target.value)}
+    disabled={loading}
+    className="border px-2 py-1 rounded capitalize"
+  >
+    <option value="user">User</option>
+    <option value="vendor">Vendor</option>
+    <option value="admin">Admin</option>
+  </select>
+</td>
+
                 </tr>
               ))}
             </tbody>
