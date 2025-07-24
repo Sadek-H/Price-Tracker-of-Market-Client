@@ -1,23 +1,22 @@
-import axios from 'axios';
-import React, { use, useEffect, useState } from 'react';
-import { FaCheck, FaTimes, FaTrashAlt } from 'react-icons/fa';
+import axios from "axios";
+import React, { use, useEffect, useState } from "react";
+import { FaCheck, FaTimes, FaTrashAlt } from "react-icons/fa";
 import { toast } from "react-toastify";
-import Swal from 'sweetalert2';
-import { AuthContext } from '../../../context/AuthContext';
+import Swal from "sweetalert2";
+import { AuthContext } from "../../../context/AuthContext";
 
 const Allads = () => {
   const [ads, setAds] = useState([]);
   const [loading, setLoading] = useState(true); // loader state
-  const {token} = use(AuthContext);
+  const { token } = use(AuthContext);
   // Load all ads
   useEffect(() => {
-    axios.get("http://localhost:3000/admin/ads",
-       {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-    )
+    axios
+      .get("http://localhost:3000/admin/ads", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => {
         setAds(res.data);
         setLoading(false);
@@ -28,13 +27,16 @@ const Allads = () => {
   }, []);
 
   const handleapprove = (id) => {
-    axios.put(`http://localhost:3000/admin/update-ads/${id}`, { status: "approved" },
-          {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-    )
+    axios
+      .put(
+        `http://localhost:3000/admin/update-ads/${id}`,
+        { status: "approved" },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((res) => {
         if (res.data.modifiedCount) {
           setAds((prevAds) =>
@@ -49,22 +51,21 @@ const Allads = () => {
 
   const handleDelete = (id) => {
     Swal.fire({
-      title: 'Are you sure?',
+      title: "Are you sure?",
       text: "You won't be able to revert this!",
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        axios.delete(`http://localhost:3000/admin/delete-ads/${id}`,
-           {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-        )
+        axios
+          .delete(`http://localhost:3000/admin/delete-ads/${id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
           .then((res) => {
             if (res.data.deletedCount > 0) {
               setAds((prevAds) => prevAds.filter((ad) => ad._id !== id));
@@ -77,7 +78,9 @@ const Allads = () => {
 
   return (
     <div className="overflow-x-auto p-4">
-      <h2 className="text-3xl font-bold mb-6 text-center text-green-700">📢 All Advertisements</h2>
+      <h2 className="text-3xl font-bold mb-6 text-center text-green-700">
+        📢 All Advertisements
+      </h2>
 
       {/* Loader */}
       {loading ? (
@@ -107,7 +110,13 @@ const Allads = () => {
                 <td>{ad.title}</td>
                 <td>{ad.description?.slice(0, 40)}...</td>
                 <td>
-                  <span className={`badge ${ad.status === "approved" ? "badge-success" : "badge-warning"}`}>
+                  <span
+                    className={`badge ${
+                      ad.status === "approved"
+                        ? "badge-success"
+                        : "badge-warning"
+                    }`}
+                  >
                     {ad.status}
                   </span>
                 </td>
