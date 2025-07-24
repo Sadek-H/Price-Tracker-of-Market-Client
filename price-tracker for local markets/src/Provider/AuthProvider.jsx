@@ -23,7 +23,7 @@ const AuthProvider = ({ children }) => {
       if (currentUser) {
         console.log(currentUser);
         const idToken = await getIdToken(currentUser, true); // get fresh token
-        console.log(idToken);
+        //console.log(idToken);
          localStorage.setItem("token", idToken);
         setToken(idToken);
       } else {

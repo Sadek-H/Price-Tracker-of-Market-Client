@@ -10,23 +10,29 @@ const EditmyProducts = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [singleproduct, setSingleProduct] = useState({});
   const [userRole, setUserRole] = useState("");
-  const { user, token } = useContext(AuthContext); // ✅ FIXED
-
+  const { user, token } = useContext(AuthContext); 
+ 
   const { id } = useParams();
   const data = useLoaderData();
-
+  console.log(data);
   // ✅ Load User Role
   useEffect(() => {
-    if (user?.email && token) {
+    if ( token) {
       axios
-        .get("http://localhost:3000/users", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        .get("http://localhost:3000/Users",
+          {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+        )
         .then((res) => {
+
+          console.log(res.data);
           const currentUser = res.data.find((u) => u.email === user.email);
+         // console.log(currentUser);
           if (currentUser) {
+         
             setUserRole(currentUser.role);
           }
         })
@@ -104,9 +110,9 @@ const EditmyProducts = () => {
       })
       .then((res) => {
         if (res.data.modifiedCount > 0) {
-          toast.success("✅ Product updated successfully!");
+          toast.success(" Product updated successfully!");
         } else {
-          toast.info("ℹ️ No changes were made.");
+          toast.info(" No changes were made.");
         }
       })
       .catch((err) => {
@@ -130,7 +136,7 @@ const EditmyProducts = () => {
             type="email"
             className="input input-bordered w-full bg-gray-100"
             name="vendorEmail"
-            value={user?.email || ""}
+          // value={singleproduct.email || "Not found"}
             readOnly
             required
           />
@@ -142,7 +148,7 @@ const EditmyProducts = () => {
             type="text"
             className="input input-bordered w-full bg-gray-100"
             name="vendorName"
-            value={user?.displayName || "Unknown Vendor"}
+          // value={singleproduct.name || "Unknown Vendor"}
             readOnly
           />
         </div>
