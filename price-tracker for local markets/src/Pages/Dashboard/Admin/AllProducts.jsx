@@ -175,7 +175,7 @@ const AllProducts = () => {
   }
 
   return (
-    <div className="p-4">
+    <div className="pt-4 max-w-7xl mx-auto">
       <h2 className="text-2xl font-bold mb-4">📋 All Vendor Products</h2>
       <div className="overflow-x-auto rounded-xl shadow">
         <table className="table w-full">

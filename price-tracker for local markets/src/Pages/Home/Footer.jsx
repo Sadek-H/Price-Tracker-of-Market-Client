@@ -8,7 +8,7 @@ const Footer = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
     >
-      <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+      <div className="max-w-screen mx-auto px-6 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
         
         {/* Logo & Name */}
         <div className="flex items-center space-x-3">
