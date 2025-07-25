@@ -72,7 +72,7 @@ const Allusers = () => {
   };
 
   return (
-    <div className="p-6 bg-white rounded shadow">
+    <div className="max-w-7xl p-6 bg-white rounded shadow">
       <h1 className="text-2xl font-bold text-center text-green-600 mb-4">
         All Registered Users
       </h1>

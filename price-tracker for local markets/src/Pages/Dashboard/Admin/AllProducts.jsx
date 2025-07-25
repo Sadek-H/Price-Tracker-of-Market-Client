@@ -168,7 +168,7 @@ const AllProducts = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-64">
+      <div className="max-w-7xl flex justify-center items-center h-64">
         <span className="loading loading-spinner loading-lg text-primary"></span>
       </div>
     );

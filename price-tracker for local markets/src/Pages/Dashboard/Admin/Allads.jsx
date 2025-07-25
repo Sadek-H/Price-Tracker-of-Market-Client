@@ -77,7 +77,7 @@ const Allads = () => {
   };
 
   return (
-    <div className="overflow-x-auto p-4">
+    <div className="max-w-7xl overflow-x-auto p-4">
       <h2 className="text-3xl font-bold mb-6 text-center text-green-700">
         📢 All Advertisements
       </h2>
